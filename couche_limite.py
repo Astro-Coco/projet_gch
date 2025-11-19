@@ -3,7 +3,7 @@ from helpers import *
 import matplotlib.pyplot as plt
 import numpy as np
 params = Params(
-    H = 0.01,
+    H = 0.001,
     mu = 0.001,
     rho = 1000,
     T_in = 298,
@@ -140,4 +140,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-#bonsoir
