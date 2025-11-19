@@ -55,15 +55,15 @@ def position(X : tuple,Y : tuple,nx : int, ny : int):
     x_values = np.linspace(X[0], X[1], nx)
     y_values = np.linspace(Y[0], Y[1], ny)  
 
-    matrice = np.zeros((ny, nx))
+    matrice_x = np.zeros((ny, nx))
     for i in range(ny):
-        matrice[i, :] = x_values
+        matrice_x[i, :] = x_values
 
     matrice_y = np.zeros((ny, nx))
     for j in range(nx):
         matrice_y[:, j] = y_values
 
-    return matrice, matrice_y
+    return matrice_x, matrice_y
 
 def idx(i, j, ny):
     return i + j * ny
