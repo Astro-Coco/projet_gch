@@ -9,5 +9,11 @@ class Params:
         self.k = k
         self.L = L
         self.U_in = U_in
+
+        Re = self.rho*self.U_in*self.H/self.mu
+        Ldev = self.Ldev*Re*self.H
+        
         self.Ldev = Ldev
+
+
 
