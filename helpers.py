@@ -1,5 +1,6 @@
 import math
 import numpy as np
+
 def vitesse_developpée(x,y, params):
     vy = 0
     vx = 3/2*params.U_in*(1 - (2*y/params.H)**2)
@@ -22,10 +23,9 @@ def vitesse(x,y, params):
     #Si plus grand, alors développée?
     #Si c'est pas la logique, juste mettre developpemt partourt 
     #et l'équation tend ver U_dev
-    if x < params.Ldev:
-        return vitesse_developpement(x,y, params)
-    else:
-        return vitesse_developpée(x,y, params)
+
+    return vitesse_developpement(x,y, params)
+
     
 def position(X : tuple,Y : tuple,nx : int, ny : int):
     """ Fonction générant deux matrices de discrétisation de l'espace
