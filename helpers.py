@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from data_structures import Params, Results
 
 def vitesse_developpée(x,y, params):
     vy = 0
