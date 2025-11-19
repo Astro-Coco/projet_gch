@@ -66,8 +66,6 @@ def mdf_assemblage(X : tuple, Y : tuple, nx : int, ny : int, params : Params):
                 A[k, k] = 1.0
                 B[k] = T_entrée
             elif droite_lim:
-                pass
-                #TODO : Faire la condition de Neumann à droite ici 
                 A[k, k] = 3/2/dx
                 k_gauche = idx(i, j - 1, ny)
                 k_gauche2 = idx(i, j - 2, ny)
@@ -101,7 +99,7 @@ def mdf_assemblage(X : tuple, Y : tuple, nx : int, ny : int, params : Params):
                 B[k] = 0
     return A, B
 
-nx, ny = 100, 100
+nx, ny = 30, 30
 
 
 A, B = mdf_assemblage((0, params.L), (-params.H/2, params.H/2), nx, ny, params)
@@ -121,18 +119,7 @@ plt.title("Température dans la couche limite")
 plt.tight_layout()
 plt.show()
 
-speed = vitesse(x_mat, y_mat, params)
 
-
-#Visulisation du champ de vitesse
-plt.figure(figsize=(12, 5))
-cf = plt.contourf(x_mat, y_mat, speed[0], levels=niveaux)
-plt.colorbar(cf, label="Vitesse en x [m/s]")
-plt.xlabel("x [m]")
-plt.ylabel("y [m]")
-plt.title("Champ de vitesse en x dans la couche limite")
-plt.tight_layout()
-plt.show()
 
 def main():
     pass
