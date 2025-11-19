@@ -66,8 +66,6 @@ def mdf_assemblage(X : tuple, Y : tuple, nx : int, ny : int, params : Params):
                 A[k, k] = 1.0
                 B[k] = T_entrée
             elif droite_lim:
-                pass
-                #TODO : Faire la condition de Neumann à droite ici 
                 A[k, k] = 3/2/dx
                 k_gauche = idx(i, j - 1, ny)
                 k_gauche2 = idx(i, j - 2, ny)
@@ -101,7 +99,7 @@ def mdf_assemblage(X : tuple, Y : tuple, nx : int, ny : int, params : Params):
                 B[k] = 0
     return A, B
 
-nx, ny = 100, 100
+nx, ny = 30, 30
 
 
 A, B = mdf_assemblage((0, params.L), (-params.H/2, params.H/2), nx, ny, params)
