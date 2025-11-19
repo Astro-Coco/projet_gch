@@ -2,18 +2,27 @@ import math
 import numpy as np
 def vitesse_developpée(x,y, params):
     vy = 0
-    vx = 3/2*params.U*(1 - (2*y/params.H)**2)
+    vx = 3/2*params.U_in*(1 - (2*y/params.H)**2)
     return vx, vy
 
 
 def vitesse_developpement(x,y, params):
     vy = 0
-    delta_x = math.sqrt(params.mu*x/params.rho/params.U)
-    vx = params.U*(1 - math.exp(-y/delta_x))
+
+    Re = params.rho*params.U_in*params.H/params.mu
+    Ldev = params.Ldev*Re*params.H
+
+    def fx() : return (1 - math.exp(-x/Ldev))
+
+    vx = params.U_in*(1- fx()) + fx()*vitesse_developpée(x,y, params)[0]
     return vx, vy
 
-def vitesse(x,y, params, Ldev = 0.05):
-    if x < Ldev:
+def vitesse(x,y, params):
+    #Plus petite que la longueur de développement, alors developpemt
+    #Si plus grand, alors développée?
+    #Si c'est pas la logique, juste mettre developpemt partourt 
+    #et l'équation tend ver U_dev
+    if x < params.Ldev:
         return vitesse_developpement(x,y, params)
     else:
         return vitesse_developpée(x,y, params)
@@ -58,3 +67,11 @@ def position(X : tuple,Y : tuple,nx : int, ny : int):
 
 def idx(i, j, ny):
     return i + j * ny
+
+def vecteur_en_matrice(T_vec, nx, ny):
+    T_mat = np.zeros((ny, nx))
+    for i in range(ny):
+        for j in range(nx):
+            k = idx(i, j, ny)  # même mapping que dans mdf_assemblage
+            T_mat[i, j] = T_vec[k]
+    return T_mat

@@ -1,5 +1,5 @@
 class Params:
-    def __init__(self, H, mu, rho, T_in, T_w, cp, k, L):
+    def __init__(self, H, mu, rho, T_in, T_w, cp, k, L, U_in, Ldev):
         self.H = H
         self.mu = mu
         self.rho = rho
@@ -8,4 +8,6 @@ class Params:
         self.cp = cp
         self.k = k
         self.L = L
+        self.U_in = U_in
+        self.Ldev = Ldev
 
