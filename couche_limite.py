@@ -121,6 +121,19 @@ plt.title("Température dans la couche limite")
 plt.tight_layout()
 plt.show()
 
+speed = vitesse(x_mat, y_mat, params)
+
+
+#Visulisation du champ de vitesse
+plt.figure(figsize=(12, 5))
+cf = plt.contourf(x_mat, y_mat, speed[0], levels=niveaux)
+plt.colorbar(cf, label="Vitesse en x [m/s]")
+plt.xlabel("x [m]")
+plt.ylabel("y [m]")
+plt.title("Champ de vitesse en x dans la couche limite")
+plt.tight_layout()
+plt.show()
+
 def main():
     pass
 
