@@ -16,9 +16,11 @@ class Params:
 
 
 class Results:
-    def __init__(self, x, y, T, U):
+    def __init__(self, x, y, T, U,y_limite_T=None,y_limite_U=None):
         self.x_mat = x
         self.y_mat = y
         self.T_mat = T
         self.U_mat = U
+        self.y_limite_T=y_limite_T
+        self.y_limite_U=y_limite_U
 
