@@ -11,9 +11,13 @@ class Params:
         self.U_in = U_in
 
         Re = self.rho*self.U_in*self.H/self.mu
-        Ldev = self.Ldev*Re*self.H
-        
-        self.Ldev = Ldev
+        self.Ldev = Ldev*Re*self.H
 
 
+class Results:
+    def __init__(self, x, y, T, U):
+        self.x_mat = x
+        self.y_mat = y
+        self.T_mat = T
+        self.U_mat = U
 
