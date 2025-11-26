@@ -1,5 +1,5 @@
 class Params:
-    def __init__(self, H, mu, rho, T_in, T_w, cp, k, L, U_in, Ldev):
+    def __init__(self, H, mu, rho, T_in, T_w, cp, k, L, U_in, Ldev, n):
         self.H = H
         self.mu = mu
         self.rho = rho
@@ -12,6 +12,7 @@ class Params:
 
         Re = self.rho*self.U_in*self.H/self.mu
         self.Ldev = Ldev*Re*self.H
+        self.n= n
 
 
 class Results:
