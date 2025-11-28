@@ -8,6 +8,7 @@ def vitesse_developpée(x,y, params):
     return vx, vy
 
 
+
 def vitesse_developpement(x,y, params):
     vy = 0
 
@@ -161,3 +162,57 @@ def mdf_assemblage(X : tuple, Y : tuple, nx : int, ny : int, params : Params):
                 A[k, k_haut] = -1/dy/dy
                 B[k] = 0
     return A, B
+
+
+#SECTION COUCHES LIMITES
+def couches_limites(resultats,Params):
+    T_mat=resultats.T_mat
+    U_mat=resultats.U_mat
+    y_mat=resultats.y_mat
+    T_w=Params.T_w
+
+    ny, nx = T_mat.shape
+
+    y_limite_T = np.zeros(nx)
+    y_limite_U = np.zeros(nx)
+    #Utilisation de la symétrie pour obtenir la couche limite de l'autre côté puisque de la manière actuelle on ne calcule que pour y>=0
+    y_limite_T_symm = np.zeros(nx)
+    y_limite_U_symm = np.zeros(nx)
+
+    for j in range(nx):
+        T_col = T_mat[:, j]
+        U_col = U_mat[:, j]
+        y_col = y_mat[:, j]
+
+        if ny%2==0:
+            i_centre=ny//2
+            T_centre = T_col[i_centre]
+            U_centre = U_col[i_centre]
+        else: 
+            i_centre_haut=ny//2
+            i_centre_bas=ny//2+1
+            T_centre=(T_col[i_centre_haut]+T_col[i_centre_bas])/2
+            U_centre=(U_col[i_centre_haut]+U_col[i_centre_bas])/2
+
+        T_limite = T_w + 0.99*(T_centre - T_w)
+        U_limite = 0.99*U_centre
+
+        # Trouver la première position où T dépasse le seuil et sa symétrie avec indice_symétrique = ny - indice - 1
+        idx_T = np.where(T_col <= T_limite)[0]
+        if len(idx_T) == 0:
+            y_limite_T[j] = np.nan
+            y_limite_T_symm[j] = ny-1
+        else:
+            y_limite_T[j] = y_col[idx_T[0]]
+            y_limite_T_symm[j] = y_col[ny - idx_T[0] - 1]
+        
+        # Trouver la première position où U dépasse le seuil et sa symétrie avec indice_symétrique = ny - indice - 1
+        idx_U= np.where(U_col >= U_limite)[0]
+        if len(idx_U) == 0:
+            y_limite_U[j] = np.nan
+            y_limite_U_symm[j] = ny-1
+        else:
+            y_limite_U[j] = y_col[idx_U[0]]
+            y_limite_U_symm[j] = y_col[ny - idx_U[0] - 1]
+
+    return y_limite_T,y_limite_U,y_limite_T_symm,y_limite_U_symm
