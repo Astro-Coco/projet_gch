@@ -1,6 +1,6 @@
 import math
 import numpy as np
-from data_structures import Params, Results
+from data_structures import *
 
 
 def vitesse_developpée(x, y, params):
