@@ -316,15 +316,15 @@ def couches_limites(
         y_col = y_mat[:, j]
 
         # Valeurs au centre du canal
-        if ny % 2 == 0:
-            i_centre = ny // 2
-            T_centre = T_col[i_centre]
-            U_centre = U_col[i_centre]
-        else:
+        if ny % 2 == 0: 
             i_centre_haut = ny // 2
             i_centre_bas = ny // 2 + 1
             T_centre = (T_col[i_centre_haut] + T_col[i_centre_bas]) / 2
             U_centre = (U_col[i_centre_haut] + U_col[i_centre_bas]) / 2
+        else:
+            i_centre = ny // 2
+            T_centre = T_col[i_centre]
+            U_centre = U_col[i_centre]
 
         T_limite = T_w + 0.99 * (T_centre - T_w)
         U_limite = 0.99 * U_centre
