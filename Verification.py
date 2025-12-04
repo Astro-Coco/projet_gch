@@ -216,6 +216,7 @@ facteur_raffinement = 2
 initial_Nx = 40
 initial_Ny = 40
 
+#Définition des maillages
 grids = [
     (initial_Nx, initial_Ny),
     (initial_Nx * facteur_raffinement, initial_Ny * facteur_raffinement),
@@ -224,6 +225,7 @@ grids = [
 
 err_L2 = []
 
+#Boucle sur chaque maillage
 for k_grid, (Nx, Ny) in enumerate(grids):
     T_num, T_an, dx, dy = laplace_2d(Nx, Ny, L_val, H_val, params, T_analytique)
     E = erreur_L2(T_num, T_an)
