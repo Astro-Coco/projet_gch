@@ -48,7 +48,7 @@ def mdf_assemblage_verification(
     ny : int
         Nombre de points de discrétisation en y.
     params : Params
-        Paramètres physiques (non utilisés ici mais gardés pour compatibilité).
+        Paramètres physiques.
     T_analytique : callable
         Fonction T(x, y) donnant la solution analytique sur le bord.
 
@@ -118,7 +118,7 @@ def laplace_2d(
     H : float
         Hauteur du domaine en y.
     params : Params
-        Paramètres physiques (p.ex. pour compatibilité générale).
+        Paramètres physiques.
     T_analytique : callable
         Solution analytique T(x, y) utilisée pour les conditions et la comparaison.
 
@@ -150,8 +150,6 @@ def erreur_L2(T_num: np.ndarray, T_an: np.ndarray) -> float:
     """
     Calcule l'erreur L2 moyenne entre la solution numérique et analytique.
 
-    Le calcul s'effectue sur le domaine intérieur (sans les bords).
-
     Parameters
     ----------
     T_num : np.ndarray
@@ -162,7 +160,7 @@ def erreur_L2(T_num: np.ndarray, T_an: np.ndarray) -> float:
     Returns
     -------
     float
-        Erreur L2 moyenne sur le domaine intérieur.
+        Erreur L2 moyenne.
     """
     err = T_num[1:-1, 1:-1] - T_an[1:-1, 1:-1]
     return np.sqrt(np.mean(err**2))
