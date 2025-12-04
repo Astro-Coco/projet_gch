@@ -317,8 +317,8 @@ def couches_limites(
 
         # Valeurs au centre du canal
         if ny % 2 == 0: 
-            i_centre_haut = ny // 2
-            i_centre_bas = ny // 2 + 1
+            i_centre_haut = ny // 2-1
+            i_centre_bas = ny // 2 
             T_centre = (T_col[i_centre_haut] + T_col[i_centre_bas]) / 2
             U_centre = (U_col[i_centre_haut] + U_col[i_centre_bas]) / 2
         else:
