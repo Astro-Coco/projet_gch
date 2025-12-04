@@ -10,9 +10,9 @@ def T_analytique(x, y):
 
     Parameters
     ----------
-    x : float ou array-like
+    x : float 
         Coordonnée(s) en x.
-    y : float ou array-like
+    y : float 
         Coordonnée(s) en y.
 
     Returns
@@ -35,6 +35,7 @@ def mdf_assemblage_verification(
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Assemble A et B pour la résolution de Laplace avec conditions analytique (Dirichlet).
+    Fonction utilisée pour la vérification de convergence, basée sur mdf_assemblage définie dans helpers
 
     Parameters
     ----------
