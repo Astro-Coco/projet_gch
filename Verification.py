@@ -3,14 +3,60 @@ from scipy.linalg import solve
 from data_structures import *
 from helpers import *
 
+
 def T_analytique(x, y):
+    """
+    Solution analytique utilisée pour la vérification de convergence.
+
+    Parameters
+    ----------
+    x : float ou array-like
+        Coordonnée(s) en x.
+    y : float ou array-like
+        Coordonnée(s) en y.
+
+    Returns
+    -------
+    np.ndarray
+        Valeur(s) de la température analytique aux points (x, y).
+    """
     x = np.asarray(x)
     y = np.asarray(y)
     return np.exp(10 * x) * np.cos(10 * y) + 10
 
-def mdf_assemblage_verification(X: tuple, Y: tuple, nx: int, ny: int, params: Params, T_analytique):
-    
-    #Assemblage pour le retrait de l'advection
+
+def mdf_assemblage_verification(
+    X: tuple[float, float],
+    Y: tuple[float, float],
+    nx: int,
+    ny: int,
+    params: Params,
+    T_analytique
+) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Assemble A et B pour la résolution de Laplace avec conditions analytique (Dirichlet).
+
+    Parameters
+    ----------
+    X : tuple[float, float]
+        Bornes du domaine en x, X = (x_min, x_max).
+    Y : tuple[float, float]
+        Bornes du domaine en y, Y = (y_min, y_max).
+    nx : int
+        Nombre de points de discrétisation en x.
+    ny : int
+        Nombre de points de discrétisation en y.
+    params : Params
+        Paramètres physiques (non utilisés ici mais gardés pour compatibilité).
+    T_analytique : callable
+        Fonction T(x, y) donnant la solution analytique sur le bord.
+
+    Returns
+    -------
+    tuple[np.ndarray, np.ndarray]
+        (A, B) système linéaire pour le problème de Laplace 2D.
+    """
+    # Assemblage pour le retrait de l'advection
     x_mat, y_mat = position(X, Y, nx, ny)
     dx = (X[1] - X[0]) / (nx - 1)
     dy = (Y[1] - Y[0]) / (ny - 1)
@@ -49,7 +95,41 @@ def mdf_assemblage_verification(X: tuple, Y: tuple, nx: int, ny: int, params: Pa
     return A, B
 
 
-def laplace_2d(Nx, Ny, L, H, params, T_analytique):
+def laplace_2d(
+    Nx: int,
+    Ny: int,
+    L: float,
+    H: float,
+    params: Params,
+    T_analytique
+) -> tuple[np.ndarray, np.ndarray, float, float]:
+    """
+    Résout le problème de Laplace 2D pour un maillage donné et compare à T_analytique.
+
+    Parameters
+    ----------
+    Nx : int
+        Nombre de points en x.
+    Ny : int
+        Nombre de points en y.
+    L : float
+        Longueur du domaine en x.
+    H : float
+        Hauteur du domaine en y.
+    params : Params
+        Paramètres physiques (p.ex. pour compatibilité générale).
+    T_analytique : callable
+        Solution analytique T(x, y) utilisée pour les conditions et la comparaison.
+
+    Returns
+    -------
+    tuple[np.ndarray, np.ndarray, float, float]
+        (T_num, T_an, dx, dy) où :
+        - T_num : solution numérique (Ny, Nx)
+        - T_an  : solution analytique évaluée sur le maillage (Ny, Nx)
+        - dx    : pas en x
+        - dy    : pas en y
+    """
     X_coords = (0, L)
     Y_coords = (0, H)
 
@@ -65,32 +145,73 @@ def laplace_2d(Nx, Ny, L, H, params, T_analytique):
     return T_num, T_an, dx, dy
 
 
-def erreur_L2(T_num, T_an):
+def erreur_L2(T_num: np.ndarray, T_an: np.ndarray) -> float:
+    """
+    Calcule l'erreur L2 moyenne entre la solution numérique et analytique.
+
+    Le calcul s'effectue sur le domaine intérieur (sans les bords).
+
+    Parameters
+    ----------
+    T_num : np.ndarray
+        Solution numérique 2D.
+    T_an : np.ndarray
+        Solution analytique 2D.
+
+    Returns
+    -------
+    float
+        Erreur L2 moyenne sur le domaine intérieur.
+    """
     err = T_num[1:-1, 1:-1] - T_an[1:-1, 1:-1]
     return np.sqrt(np.mean(err**2))
 
 
-def ordre(erreur_grossier, erreur_fin, facteur_raffinement):
+def ordre(
+    erreur_grossier: float,
+    erreur_fin: float,
+    facteur_raffinement: float
+) -> float:
+    """
+    Estime l'ordre de convergence p à partir de deux erreurs et d'un facteur de raffinement.
+
+    Parameters
+    ----------
+    erreur_grossier : float
+        Erreur sur le maillage grossier.
+    erreur_fin : float
+        Erreur sur le maillage raffiné.
+    facteur_raffinement : float
+        Facteur de raffinement spatial (ex. 2 pour Nx_fin = 2 * Nx_grossier).
+
+    Returns
+    -------
+    float
+        Ordre de convergence estimé p. np.nan si une des erreurs vaut 0.
+    """
     if erreur_fin == 0 or erreur_grossier == 0:
         return np.nan
     p = np.log(erreur_grossier / erreur_fin) / np.log(facteur_raffinement)
     return p
 
-#Hauteur doit être plus grande pour avoir des erreurs assez grandes
+
+# Hauteur doit être plus grande pour avoir des erreurs assez grandes
 H_val = 1.0
 L_val = 1.0
 
-params = Params( H = H_val,
-    mu = 0.001,
-    rho = 1000,
-    T_in = 298,
-    T_w = 373,
-    cp = 4186,
-    k = 0.6,
-    L = 1.0,
-    U_in = 1.0,
-    Ldev = 0.05,
-    n=1)
+params = Params(
+    H=H_val,
+    mu=0.001,
+    rho=1000,
+    T_in=298,
+    T_w=373,
+    cp=4186,
+    k=0.6,
+    L=1.0,
+    U_in=1.0,
+    Ldev=0.05,
+    n=1
+)
 
 facteur_raffinement = 2
 initial_Nx = 40
@@ -108,7 +229,7 @@ for k_grid, (Nx, Ny) in enumerate(grids):
     T_num, T_an, dx, dy = laplace_2d(Nx, Ny, L_val, H_val, params, T_analytique)
     E = erreur_L2(T_num, T_an)
     err_L2.append(E)
-    
+
 if len(err_L2) >= 2:
     p_32 = ordre(err_L2[0], err_L2[1], facteur_raffinement)
     p_21 = ordre(err_L2[1], err_L2[2], facteur_raffinement)
